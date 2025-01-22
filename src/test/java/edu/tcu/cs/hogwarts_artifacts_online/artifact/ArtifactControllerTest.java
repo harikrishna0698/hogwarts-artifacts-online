@@ -6,6 +6,7 @@ import edu.tcu.cs.hogwarts_artifacts_online.artifact.converter.ArtfiactToArtifac
 import edu.tcu.cs.hogwarts_artifacts_online.artifact.converter.ArtifactDtoToArtifactConverter;
 import edu.tcu.cs.hogwarts_artifacts_online.artifact.dto.ArtifactDto;
 import edu.tcu.cs.hogwarts_artifacts_online.system.StatusCode;
+import edu.tcu.cs.hogwarts_artifacts_online.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.hogwarts_artifacts_online.wizard.converter.WizardToWizardDtoConverter;
 import edu.tcu.cs.hogwarts_artifacts_online.wizard.dto.WizardDto;
 import org.hamcrest.Matchers;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,6 +63,8 @@ class ArtifactControllerTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+
         this.artifacts = new ArrayList<>();
 
         Artifact a1 = new Artifact();
@@ -124,14 +128,14 @@ class ArtifactControllerTest {
     @Test
     void testFindArtifactByIdNotFound() throws Exception {
         // Given
-        given(this.artifactService.findById("1250808601744904191")).willThrow(new ArtifactNotFoundException("1250808601744904191"));
+        given(this.artifactService.findById("1250808601744904191")).willThrow(new ObjectNotFoundException("artifact","1250808601744904191"));
 
         // When and then
         this.mockMvc.perform(get("/api/v1/artifacts/{artifactId}", "1250808601744904191")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("could not find artifact with Id: 1250808601744904191"))
+                .andExpect(jsonPath("$.message").value("Could not find artifact with Id: 1250808601744904191"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -245,7 +249,7 @@ class ArtifactControllerTest {
         //Artifact artifact = new Artifact();
         //Mockito.when(artifactDtoToArtifactConverter.convert(Mockito.any(ArtifactDto.class))).thenReturn(artifact);
         given(this.artifactService.update(eq("1250808601744904192"),Mockito.any(Artifact.class)))
-                .willThrow(new ArtifactNotFoundException("1250808601744904192"));
+                .willThrow(new ObjectNotFoundException("artifact","1250808601744904192"));
         //given(this.artifactToArtifactDtoConverter.convert(updatedArtifact)).willReturn(savedArtifactDto);
 
 
@@ -255,7 +259,7 @@ class ArtifactControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("could not find artifact with Id: 1250808601744904192"))
+                .andExpect(jsonPath("$.message").value("Could not find artifact with Id: 1250808601744904192"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -278,14 +282,14 @@ class ArtifactControllerTest {
     @Test
     void testDeleteArtifactErrorWithNonExistentId() throws Exception {
         //Given
-        doThrow(new ArtifactNotFoundException("1250808601744904191")).when(this.artifactService).delete("1250808601744904191");
+        doThrow(new ObjectNotFoundException("artifact","1250808601744904191")).when(this.artifactService).delete("1250808601744904191");
 
         //When
         this.mockMvc.perform(delete("/api/v1/artifacts/1250808601744904191").contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("could not find artifact with Id: 1250808601744904191"))
+                .andExpect(jsonPath("$.message").value("Could not find artifact with Id: 1250808601744904191"))
                 .andExpect(jsonPath("$.data").isEmpty());
 
         //Then

@@ -1,4 +1,9 @@
 spring:
+  security:
+    user:
+      name: user
+      password: # Leave blank to auto-generate
+
   application:
     name: hogwarts-artifacts-online
   datasource:
@@ -11,3 +16,7 @@ spring:
 
 server:
   port: 8089
+
+api:
+  endpoint:
+    base-url: /api/v1

@@ -1,6 +1,7 @@
 package edu.tcu.cs.hogwarts_artifacts_online.artifact;
 
 import edu.tcu.cs.hogwarts_artifacts_online.artifact.utils.IdWorker;
+import edu.tcu.cs.hogwarts_artifacts_online.system.exception.ObjectNotFoundException;
 import jakarta.persistence.Id;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,8 @@ public class ArtifactService {
     }
 
     public Artifact update(String artifactId,Artifact update){
-        Artifact oldArtifact = this.artifactRepository.findById(artifactId).orElseThrow(() -> new ArtifactNotFoundException(artifactId));
+        Artifact oldArtifact = this.artifactRepository.findById(artifactId)
+                .orElseThrow(() -> new ObjectNotFoundException("artifact",artifactId));
         oldArtifact.setName(update.getName());
         oldArtifact.setDescription(update.getDescription());
         oldArtifact.setImageUrl(update.getImageUrl());

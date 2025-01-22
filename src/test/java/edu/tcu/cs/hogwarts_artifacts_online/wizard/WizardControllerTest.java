@@ -220,7 +220,7 @@ class WizardControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("could not find wizard with Id: 101"))
+                .andExpect(jsonPath("$.message").value("Could not find wizard with Id: 101"))
                 .andExpect(jsonPath("$.data").isEmpty());
 
         //Then
