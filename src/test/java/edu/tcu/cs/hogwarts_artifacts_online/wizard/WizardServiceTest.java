@@ -1,5 +1,6 @@
 package edu.tcu.cs.hogwarts_artifacts_online.wizard;
 
+import edu.tcu.cs.hogwarts_artifacts_online.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,7 +92,7 @@ class WizardServiceTest {
 
         //Then
         assertThat(thrown).isInstanceOf(WizardNotFoundException.class)
-                .hasMessage(("could not find artifact with Id: 101"));
+                .hasMessage(("Could not find wizard with Id: 101"));
         verify(wizardRepository,times(1)).findById(101);
     }
 
